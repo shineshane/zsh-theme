@@ -198,15 +198,20 @@ prompt_virtualenv() {
   fi
 }
 
+# Machine name.
+function box_name {
+    [ -f ~/.box-name ] && cat ~/.box-name || echo $HOST
+}
+
 # Status:
 # - was there an error
-# - am I root
+# - am I root (in linux)
 # - are there background jobs?
 prompt_status() {
   local symbols
   symbols=()
   [[ $RETVAL -ne 0 ]] && symbols+="%{%F{red}%}✘"
-  [[ $UID -eq 0 ]] && symbols+="%{%F{yellow}%}LINUX"
+  [[ $UID -eq 0 ]] && symbols+="%{%F{blue}%}$(box_name)"
   [[ $(jobs -l | wc -l) -gt 0 ]] && symbols+="%{%F{cyan}%}⚙"
 
   [[ -n "$symbols" ]] && prompt_segment black default "$symbols"
@@ -225,10 +230,5 @@ build_prompt() {
   prompt_end
 }
 
-# Machine name.
-function box_name {
-    [ -f ~/.box-name ] && cat ~/.box-name || echo $HOST
-}
-
 PROMPT='%{%f%b%k%}$(build_prompt) '
-RPROMPT='%{$fg[cyan]%}<%n@$(box_name)> %{%F{yellow}%}[%*]'
+RPROMPT='%{%F{yellow}%}[%*]'
