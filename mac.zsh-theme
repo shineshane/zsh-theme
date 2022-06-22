@@ -212,11 +212,19 @@ prompt_status() {
   [[ -n "$symbols" ]] && prompt_segment black default "$symbols"
 }
 
+# Conda info
+conda_prompt_info() {
+  if [ -n "SCONDA_DEFAULT_ENV" ]; then
+  	prompt_segment white black "conda: $CONDA_DEFAULT_ENV"
+  fi
+}
+
 ## Main prompt
 build_prompt() {
   RETVAL=$?
   prompt_status
   prompt_virtualenv
+  # conda_prompt_info
   prompt_context
   prompt_dir
   prompt_git
